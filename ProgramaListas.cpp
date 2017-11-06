@@ -46,7 +46,8 @@ int main(){
 	printf("ingresar cantidad de nodos: ");
 	scanf("%d",&nod);
 	for(i=0;i<nod;i++)*/	
-	nuevalista *primerNum = (nuevalista*)malloc(sizeof(nuevalista));
+	//nuevalista *primerNum = (nuevalista*)malloc(sizeof(nuevalista));
+	nuevalista (*primerNum)=new nuevalista();
 	primerNum->	dato=7;
 	
 	nuevalista *segundoNum =(nuevalista*) malloc(sizeof(nuevalista));
