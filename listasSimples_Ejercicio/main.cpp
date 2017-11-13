@@ -2,10 +2,10 @@
 #include<windows.h>
 #include<conio.h>
 #include<stdio.h>
+#include <time.h>
 #define TECLA_ARRIBA 72 // NUMERO ASCII DE ARRIBA,ABAJO,ENTER
 #define TECLA_ABAJO 80
 #define TECLA_ENTER 13
-
 
 /*Libreria externa*/
 void gotoxy(int x,int y)
@@ -16,6 +16,7 @@ void gotoxy(int x,int y)
 	dwPos.Y=y;
 	SetConsoleCursorPosition(hcon,dwPos);
 }
+
 /* Encabezado*/
 void encabezado()
 {
@@ -37,13 +38,14 @@ void menu()
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),14); //letras en amarillo
 	printf("\n\n\t\t\tMENU\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15); //letras en blanco
-	printf("\t\t 1) Insartar Numero.\n");
+	printf("\t\t 1) Insertar Numero.\n");
 	printf("\t\t 2) Buscar Numero.\n");
 	printf("\t\t 3) Modificar Numero.\n");
 	printf("\t\t 4) Eliminar Numero.\n");
 	printf("\t\t 5) Imprimir Listado.\n");
 	printf("\t\t 6) Salir.\n");
 }
+
 /*Declaracion de estructura*/
 struct Nodo{
   int datoEntero;
@@ -69,39 +71,46 @@ char *ingresar(char *msg){
     int i=0;
     printf("%s",msg);
     ///validar solo numeros
-    while((c=getch())!= TECLA_ENTER)
+    do
     {
-        if(c>='0'&& c<='9'&& c!=' ')  /// validar que no ingrese vacio
-        {
-            printf("%c",c);
-            dato[i++]=c;
-        }
-		if(c==8)	///VALIDAR BIEN EL BACKSPACE
+    	dato[0]='\0';
+		while((c=getch())!= TECLA_ENTER)
 		{
-			printf("\b");
-			printf(" ");
-			dato[i--]=' ';
+		    if(c>='0'&& c<='9'&& c!=' ')  /// validar que no ingrese vacio
+		    {
+		        printf("%c",c);
+		        dato[i++]=c;
+		    }
+			if(c==8)	///VALIDAR BIEN EL BACKSPACE
+			{
+				printf("\b");
+				printf(" ");
+				dato[i--]=' ';
+			}
+		    dato[i]='\0';
 		}
-        dato[i]='\0';
-    }
+		if(dato[0]==' ')
+			printf("Vuelva a ingresar un numero entero !\n\n");
+	}while(dato[0]=='\0');
     return dato;
 }
 void insertarDato(ListaSimple &Nuevo,int datoNuevo) ///realizar el recorrido bien hecho
 {
     ListaSimple aux=new Nodo();
     if(Nuevo==NULL)
-    {
-        aux->datoEntero=datoNuevo;
-        aux->siguienteDir=NULL;
-    }
-    else
-    {
-        aux->datoEntero=datoNuevo;
-        aux->siguienteDir=Nuevo;
-    }
+	{
+		aux->datoEntero = datoNuevo;
+		aux->siguienteDir=NULL;
+		
+	}else
+	{
+		aux->datoEntero = datoNuevo;
+		aux->siguienteDir =Nuevo;
+	}
     Nuevo=aux;
-    printf("\n(%d)\tNODO INGRESADO CORRECTAMENTE !!\n",aux->datoEntero);
     contadorNodo++;
+    printf("\n(%d)\tNODO INGRESADO CORRECTAMENTE !!\n",Nuevo->datoEntero);
+    
 }
 void imprimirDatos(ListaSimple &Lista) //&Lista manda la direccion de toda la lista
 {
@@ -123,7 +132,7 @@ void imprimirDatos(ListaSimple &Lista) //&Lista manda la direccion de toda la li
 
 }
 void buscarNodo(ListaSimple &lista){
-	int buscar;
+	int buscar,contadorInterno;
 	ListaSimple guia=new Nodo();
 	guia=lista;
 	if(guia == NULL)
@@ -137,13 +146,13 @@ void buscarNodo(ListaSimple &lista){
 			printf("Elemento no existente\n\n");
 		else
 		{
-			contadorNodo=0;
-			while(buscar!=contadorNodo)
+			contadorInterno=0;
+			while(buscar!=contadorInterno)
 			{
 				guia=guia->siguienteDir;
-				contadorNodo++;
+				contadorInterno++;
 			}
-			if(buscar==contadorNodo)
+			if(buscar==contadorInterno)
 				printf("El numero en la ubicacion %d es : %d\n\n",buscar,guia->datoEntero);
 		}
 	}
@@ -175,14 +184,21 @@ void modificarNodo(ListaSimple &lista)
 			guia=guia->siguienteDir;
 		}
 		if(cont==0)
-			printf("No se han encontrado elementos similares\n\n");			
-		
+			printf("No se han encontrado elementos similares\n\n");
+
 	}
 }
 void eliminarNodo(ListaSimple &lista)
 {
-	ListaSimple guia=new Nodo();
-	guia=lista;
+	if(lista == NULL)
+    	printf("LISTA VACIA . . .\n\n");
+    else
+    {
+    	printf("ELIMINAR . . .\n\n");
+    	lista=lista->siguienteDir;
+		printf ("Usted ha eliminado el ultimo elemento");
+		printf("\nEliminacion Exitosa !\n\n");
+	}
 }
 boolean MenuOpciones(ListaSimple &Lista,int Opcion)
 {
@@ -201,17 +217,16 @@ boolean MenuOpciones(ListaSimple &Lista,int Opcion)
 		    {
 				datoEnteroIngresado=atoi(ingresar("Ingrese un valor entero positivo: "));
 			    insertarDato(Lista,datoEnteroIngresado);
-			    printf("Desea volver a ingresar un numero Yes o No (Y/N): ");
-			    fflush(stdin);
-			    scanf("%c",&opcion);
+			    printf("Desea volver a ingresar un numero Yes o No (Y/N) ");
+			    opcion=getch();
 			    while(((opcion!='Y')&&(opcion!='y'))&&((opcion!='N')&&(opcion!='n')))
 			    {
-			         printf("Opcion incorrecta !!\n");
+			         printf("\nOpcion incorrecta !!\n");
 			         fflush(stdin);
-			         printf("Ingrese correctamente la opcion Yes o No (Y/N): ");
-			         scanf("%c",&opcion);
+			         printf("Ingrese correctamente la opcion Yes o No (Y/N) ");
+			         opcion=getch();
 			    }
-				printf("\n");
+				printf("\n\n");
 		    }while((opcion=='Y')||(opcion=='y'));
 			break;
 		}
@@ -223,7 +238,7 @@ boolean MenuOpciones(ListaSimple &Lista,int Opcion)
 		}
 		case 3:
 		{
-			modificarNodo(Lista);	
+			modificarNodo(Lista);
 			break;
 		}
 		case 4:
@@ -252,7 +267,7 @@ boolean MenuOpciones(ListaSimple &Lista,int Opcion)
 		printf("Presione cualquier tecla para volver al menu principal. . .");
 		getch();
 	}
-	
+
 	return salir;
 }
 int Seleccion()
@@ -265,11 +280,10 @@ int Seleccion()
 		gotoxy(0,0);
 		encabezado();
 		menu();
-		gotoxy(15,11+seleccionar); //17
+		gotoxy(17,11+seleccionar); //17
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),249);
-		printf("%c %s",175,opciones[seleccionar-1]);
-		//printf("%s",opciones[seleccionar-1]);
-
+		//printf("%c %s",175,opciones[seleccionar-1]); //impresion con asterisco
+		printf("%s",opciones[seleccionar-1]);
 		do
 		{
 			tecla=getch();
@@ -306,7 +320,7 @@ int main()
     	opcion=Seleccion();
     	op=MenuOpciones(nuevoNodo,opcion);
 	}while(op);
-
+	
     return 0;
 }
 
