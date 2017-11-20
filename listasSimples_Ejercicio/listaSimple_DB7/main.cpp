@@ -49,7 +49,7 @@ void menu()
 /*Declaracion de estructura*/
 struct Nodo{
   int datoEntero;
-  struct Nodo *siguienteDir;
+  struct Nodo *siguienteDireccion;
 };
 typedef struct Nodo *ListaSimple;
 
@@ -100,12 +100,12 @@ void insertarDato(ListaSimple &Nuevo,int datoNuevo) ///realizar el recorrido bie
     if(Nuevo==NULL)
 	{
 		aux->datoEntero = datoNuevo;
-		aux->siguienteDir=NULL;
+		aux->siguienteDireccion=NULL;
 		
 	}else
 	{
 		aux->datoEntero = datoNuevo;
-		aux->siguienteDir =Nuevo;
+		aux->siguienteDireccion =Nuevo;
 	}
     Nuevo=aux;
     contadorNodo++;
@@ -125,7 +125,7 @@ void imprimirDatos(ListaSimple &Lista) //&Lista manda la direccion de toda la li
 		while(aux != NULL)
 		{
 	        printf("%d, ",aux->datoEntero);
-	        aux=aux->siguienteDir;
+	        aux=aux->siguienteDireccion;
 	    }
 		printf("\b\b \n\n");
 	}
@@ -149,7 +149,7 @@ void buscarNodo(ListaSimple &lista){
 			contadorInterno=0;
 			while(buscar!=contadorInterno)
 			{
-				guia=guia->siguienteDir;
+				guia=guia->siguienteDireccion;
 				contadorInterno++;
 			}
 			if(buscar==contadorInterno)
@@ -181,7 +181,7 @@ void modificarNodo(ListaSimple &lista)
 				printf("Cambio Exitoso\n\n");
 				cont++;
 			}
-			guia=guia->siguienteDir;
+			guia=guia->siguienteDireccion;
 		}
 		if(cont==0)
 			printf("No se han encontrado elementos similares\n\n");
@@ -195,7 +195,7 @@ void eliminarNodo(ListaSimple &lista)
     else
     {
     	printf("ELIMINAR . . .\n\n");
-    	lista=lista->siguienteDir;
+    	lista=lista->siguienteDireccion;
 		printf ("Usted ha eliminado el ultimo elemento");
 		printf("\nEliminacion Exitosa !\n\n");
 	}

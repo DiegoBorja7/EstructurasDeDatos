@@ -3,16 +3,19 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 /*declaración de estructura*/
 struct Nodo{
 	int datoEntero;
 	struct Nodo *siguinteDir;
 };
 typedef struct Nodo *ListaSimple;
+
 /*Declaracion de prototipos*/
 char *ingresar(char *);
 void insertarDato(ListaSimple *,int);
 void imprimirDatos(ListaSimple *);
+
 /*desarrollo de prototipos*/
 char *ingresar(char *msg){
 	char dato[5];
